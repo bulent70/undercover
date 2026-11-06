@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api, type ClaimSummary, type Status } from "./api";
 import { date, money, statusLabels, words } from "./format";
 import { StatusChip } from "./StatusChip";
 
 const statuses = Object.keys(statusLabels) as Status[];
+const pollMilliseconds = 2000;
 
 export function QueuePage() {
   const [claims, setClaims] = useState<ClaimSummary[] | null>(null);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  const load = useCallback(() => {
     api
       .listClaims()
       .then(setClaims)
@@ -17,6 +18,17 @@ export function QueuePage() {
         setError(String(reason));
       });
   }, []);
+
+  useEffect(load, [load]);
+
+  const working = claims?.some((claim) => claim.status === "in_progress");
+  useEffect(() => {
+    if (!working) return;
+    const timer = setInterval(load, pollMilliseconds);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [working, load]);
 
   if (error) return <p role="alert">Could not load the queue. {error}</p>;
   if (!claims) return <p>Loading the queue</p>;

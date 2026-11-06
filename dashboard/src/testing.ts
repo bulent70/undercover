@@ -1,5 +1,12 @@
 import { vi } from "vitest";
-import type { Claim, ClaimSummary, Policy, PreviousClaim } from "./api";
+import type {
+  Claim,
+  ClaimSummary,
+  Decision,
+  Payment,
+  Policy,
+  PreviousClaim,
+} from "./api";
 
 export type Routes = Record<string, unknown>;
 
@@ -84,21 +91,25 @@ export const claim: Claim = {
   payment: null,
 };
 
+export const decision: Decision = {
+  decision: "approve",
+  payout: 1250,
+  reason: "The delay is covered. The costs are within the limit.",
+  section: "3. Trip Delay",
+  decided_at: "2026-11-06T10:00:00+00:00",
+};
+
+export const payment: Payment = {
+  amount: 1250,
+  handler_id: "HND-01",
+  paid_at: "2026-11-06T11:00:00+00:00",
+};
+
 export const decided: Claim = {
   ...claim,
   status: "decided",
-  decision: {
-    decision: "approve",
-    payout: 1250,
-    reason: "The delay is covered. The costs are within the limit.",
-    section: "3. Trip Delay",
-    decided_at: "2026-11-06T10:00:00+00:00",
-  },
-  payment: {
-    amount: 1250,
-    handler_id: "HND-01",
-    paid_at: "2026-11-06T11:00:00+00:00",
-  },
+  decision,
+  payment,
 };
 
 export const policy: Policy = {

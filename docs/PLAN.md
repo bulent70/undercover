@@ -104,12 +104,12 @@ Three pages with a hash router: the queue (`#/`), a claim (`#/claims/CLM-1001`) 
 
 On the claim page: a "Run agent" button for claims that are waiting or in progress, the agent's steps polled every two seconds while the claim is in progress, and for claims waiting for sign-off, a handler picker and a "Sign off and pay" button. The queue refreshes its states while any claim is in progress.
 
-- [ ] Vitest: steps appear as they arrive and polling stops when the claim leaves `in_progress`.
-- [ ] Vitest: signing off calls `sign_off_claim` with the chosen handler and shows the payment.
-- [ ] Playwright: the queue lists 25 claims and a claim page opens.
-- [ ] Playwright: a claim given an approval over $1,000 through the API shows "Waiting for sign-off"; signing off as Dana Whitfield shows it decided and paid. No model is called.
-- [ ] End-to-end runs use their own database file, emptied at the start, so they never change the development data.
-- [ ] Browser check with the Playwright MCP server: run the agent on one claim from the dashboard and watch the steps appear, then the decision.
+- [x] Vitest: steps appear as they arrive and polling stops when the claim leaves `in_progress`.
+- [x] Vitest: signing off calls `sign_off_claim` with the chosen handler and shows the payment.
+- [x] Playwright: the queue lists 25 claims and a claim page opens.
+- [x] Playwright: a claim given an approval over $1,000 through the API shows "Waiting for sign-off"; signing off as Dana Whitfield shows it decided and paid. No model is called.
+- [x] End-to-end runs use their own database file, emptied at the start, so they never change the development data.
+- [x] Browser check with the Playwright MCP server: run the agent on one claim from the dashboard and watch the steps appear, then the decision.
 
 ## Phase 6: Working the queue and handover
 
