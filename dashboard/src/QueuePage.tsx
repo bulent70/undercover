@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, type ClaimSummary, type Status } from "./api";
-import { date, money, statusLabels, words } from "./format";
+import { date, decisionLabels, money, statusLabels, words } from "./format";
 import { StatusChip } from "./StatusChip";
 
 const statuses = Object.keys(statusLabels) as Status[];
@@ -57,6 +57,7 @@ export function QueuePage() {
               <th scope="col" className="number">
                 Claimed
               </th>
+              <th scope="col">Decision</th>
               <th scope="col">State</th>
             </tr>
           </thead>
@@ -70,6 +71,16 @@ export function QueuePage() {
                 <td>{words(claim.claim_type)}</td>
                 <td className="nowrap">{date(claim.submitted_on)}</td>
                 <td className="number mono">{money(claim.amount_claimed)}</td>
+                <td className="nowrap">
+                  {claim.decision && (
+                    <span className={`decision decision-${claim.decision}`}>
+                      {decisionLabels[claim.decision]}
+                    </span>
+                  )}
+                  {claim.decision === "approve" && claim.payout !== null && (
+                    <span className="mono"> {money(claim.payout)}</span>
+                  )}
+                </td>
                 <td>
                   <StatusChip status={claim.status} />
                 </td>

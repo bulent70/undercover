@@ -14,6 +14,24 @@ def test_list_claims(client):
     assert {claim["status"] for claim in claims} == {"waiting"}
 
 
+def test_list_claims_shows_decisions(client):
+    client.post("/api/claims/CLM-1001/start")
+    client.post(
+        "/api/claims/CLM-1001/decision",
+        json={
+            "decision": "approve",
+            "payout": 420.0,
+            "reason": "Covered delay.",
+            "section": "3. Trip Delay",
+        },
+    )
+    claims = {claim["claim_id"]: claim for claim in client.get("/api/claims").json()}
+    assert claims["CLM-1001"]["decision"] == "approve"
+    assert claims["CLM-1001"]["payout"] == 420.0
+    assert claims["CLM-1002"]["decision"] is None
+    assert claims["CLM-1002"]["payout"] is None
+
+
 def test_get_claim(client):
     claim = client.get("/api/claims/CLM-1001").json()
     assert claim["story"].startswith("My flight home from Rome")

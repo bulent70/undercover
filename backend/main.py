@@ -23,14 +23,19 @@ def health() -> dict[str, str]:
 
 @app.get("/api/claims", operation_id="list_claims")
 def list_claims(database: Database) -> list[dict[str, Any]]:
-    """List the claims queue with where each claim stands."""
+    """List the claims queue with where each claim stands and its decision."""
     rows = database.execute(
-        "SELECT record, status FROM claims ORDER BY claim_id"
+        "SELECT claims.record, claims.status, decisions.decision, decisions.payout"
+        " FROM claims LEFT JOIN decisions USING (claim_id) ORDER BY claim_id"
     ).fetchall()
     fields = ("claim_id", "summary", "claim_type", "submitted_on", "amount_claimed")
     return [
         {field: json.loads(row["record"])[field] for field in fields}
-        | {"status": row["status"]}
+        | {
+            "status": row["status"],
+            "decision": row["decision"],
+            "payout": row["payout"],
+        }
         for row in rows
     ]
 

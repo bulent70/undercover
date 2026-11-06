@@ -25,6 +25,17 @@ it("lists the claims with their states and amounts in US dollars", async () => {
   expect(within(rows[4]).getByText("Decided")).toBeDefined();
 });
 
+it("shows each decision, with the payout when approved", async () => {
+  stubApi({ "GET /api/claims": summaries });
+  render(<QueuePage />);
+  const rows = within(await screen.findByRole("table")).getAllByRole("row");
+  expect(within(rows[1]).queryByText(/Approved|Declined|Referred/)).toBeNull();
+  expect(within(rows[3]).getByText("Approved")).toBeDefined();
+  expect(within(rows[3]).getByText("$1,250.00")).toBeDefined();
+  expect(within(rows[4]).getByText("Declined")).toBeDefined();
+  expect(within(rows[4]).queryByText("$0.00")).toBeNull();
+});
+
 it("counts the claims in each state", async () => {
   stubApi({ "GET /api/claims": summaries });
   render(<QueuePage />);

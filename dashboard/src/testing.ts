@@ -37,6 +37,8 @@ export const summaries: ClaimSummary[] = [
     submitted_on: "2026-06-24",
     amount_claimed: 420,
     status: "waiting",
+    decision: null,
+    payout: null,
   },
   {
     claim_id: "CLM-1002",
@@ -45,6 +47,8 @@ export const summaries: ClaimSummary[] = [
     submitted_on: "2026-06-25",
     amount_claimed: 1150,
     status: "in_progress",
+    decision: null,
+    payout: null,
   },
   {
     claim_id: "CLM-1003",
@@ -53,6 +57,8 @@ export const summaries: ClaimSummary[] = [
     submitted_on: "2026-06-26",
     amount_claimed: 3800,
     status: "waiting_for_signoff",
+    decision: "approve",
+    payout: 1250,
   },
   {
     claim_id: "CLM-1004",
@@ -61,6 +67,8 @@ export const summaries: ClaimSummary[] = [
     submitted_on: "2026-06-27",
     amount_claimed: 186,
     status: "decided",
+    decision: "decline",
+    payout: 0,
   },
 ];
 

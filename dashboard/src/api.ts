@@ -8,6 +8,8 @@ export interface ClaimSummary {
   submitted_on: string;
   amount_claimed: number;
   status: Status;
+  decision: Decision["decision"] | null;
+  payout: number | null;
 }
 
 export interface Item {
@@ -36,7 +38,7 @@ export interface Payment {
   paid_at: string;
 }
 
-export interface Claim extends ClaimSummary {
+export interface Claim extends Omit<ClaimSummary, "decision" | "payout"> {
   policy_id: string;
   customer_id: string;
   incident_date: string;
