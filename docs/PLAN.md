@@ -115,10 +115,10 @@ On the claim page: a "Run agent" button for claims that are waiting or in progre
 
 Add `uv run -m agent --queue`, which runs the agent on every waiting claim in turn. Bring `docs/STATUS.md` up to date with what is built and how to run it.
 
-- [ ] Stub-model test: `--queue` runs each waiting claim once and skips decided ones.
-- [ ] `docs/STATUS.md` says what is built, how to start it (`npm run dev`), how to run the agent on a claim and on the queue, and the `UNDERCOVER_DB` setting.
-- [ ] `npm run check` passes: ruff, pyright, pytest, ESLint, Prettier, tsc, vitest and Playwright.
-- [ ] Every phase is committed, with the pre-commit hook passing and no `--no-verify`.
+- [x] Stub-model test: `--queue` runs each waiting claim once and skips decided ones.
+- [x] `docs/STATUS.md` says what is built, how to start it (`npm run dev`), how to run the agent on a claim and on the queue, and the `UNDERCOVER_DB` setting.
+- [x] `npm run check` passes: ruff, pyright, pytest, ESLint, Prettier, tsc, vitest and Playwright.
+- [x] Every phase is committed, with the pre-commit hook passing and no `--no-verify`.
 
 ## Not in the pilot
 

@@ -5,7 +5,7 @@ from langchain_core.messages import AIMessage
 
 from agent import __main__ as cli
 from agent import main
-from backend import workflow
+from backend import db, workflow
 from backend.main import app
 
 CLAIM = "/api/claims/CLM-1001"
@@ -137,3 +137,46 @@ def test_model_name(monkeypatch):
     assert main.model().reasoning_effort == "low"
     monkeypatch.setenv("MODEL_NAME", "openrouter/free")
     assert main.model().model_name == "openrouter/free"
+
+
+def declining(claim_id):
+    return [
+        AIMessage(
+            content="",
+            tool_calls=[
+                tool_call(
+                    "decide_claim",
+                    1,
+                    claim_id=claim_id,
+                    decision="decline",
+                    payout=0,
+                    reason="Not covered.",
+                    section="9. General exclusions",
+                )
+            ],
+        ),
+        AIMessage(content=f"Declined {claim_id}."),
+    ]
+
+
+def test_queue_runs_each_waiting_claim_once(backend, stub_model):
+    connection = db.connect()
+    connection.execute(
+        "UPDATE claims SET status = 'decided' WHERE claim_id NOT IN (?, ?)",
+        ("CLM-1002", "CLM-1005"),
+    )
+    connection.commit()
+    replies = main.run_queue(stub_model(declining("CLM-1002") + declining("CLM-1005")))
+    assert replies == {
+        "CLM-1002": "Declined CLM-1002.",
+        "CLM-1005": "Declined CLM-1005.",
+    }
+    statuses = {claim["status"] for claim in backend.get("/api/claims").json()}
+    assert statuses == {"decided"}
+
+
+def test_command_line_queue(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["agent", "--queue"])
+    monkeypatch.setattr(cli, "run_queue", lambda: {"CLM-1001": "Approved."})
+    cli.main()
+    assert capsys.readouterr().out == "CLM-1001: Approved.\n"

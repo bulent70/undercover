@@ -3,6 +3,7 @@
 import json
 import os
 from typing import Any, Literal
+from uuid import uuid4
 
 import httpx
 from dotenv import load_dotenv
@@ -154,3 +155,10 @@ def run(claim_id: str, thread_id: str, llm: BaseChatModel | None = None) -> str:
                 if isinstance(message, AIMessage):
                     reply = message.text
     return reply
+
+
+def run_queue(llm: BaseChatModel | None = None) -> dict[str, str]:
+    """Run the agent on every waiting claim in turn and return each final reply."""
+    claims = request("GET", "/api/claims")
+    waiting = [claim["claim_id"] for claim in claims if claim["status"] == "waiting"]
+    return {claim_id: run(claim_id, uuid4().hex, llm) for claim_id in waiting}
