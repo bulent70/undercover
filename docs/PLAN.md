@@ -94,11 +94,11 @@ Rewrite `agent/main.py` around the API. Tools: `get_claim`, `get_policy`, `get_c
 
 Three pages with a hash router: the queue (`#/`), a claim (`#/claims/CLM-1001`) and the agent's instructions (`#/instructions`). Typed API client in `dashboard/src/api.ts`. Brand from `docs/BRAND.md`: Instrument Sans, Instrument Serif and JetBrains Mono from Google Fonts; state chips in Sea Green, Marigold, Coral and Cerulean; light and dark mode from the system setting; money as $1,250.00.
 
-- [ ] Vitest: the queue renders rows from a stubbed API with their state labels (Waiting, In progress, Waiting for sign-off, Decided) and amounts formatted as US dollars.
-- [ ] Vitest: the claim page shows the story, items, documents, policy and history, and the decision, payout, reason and section when there is one.
-- [ ] Vitest: the instructions page shows the text with no way to edit it.
-- [ ] TypeScript coverage at or above 80%; ESLint, Prettier and tsc clean, no `any`.
-- [ ] Browser check with the Playwright MCP server: the queue shows 25 claims, a claim opens, the instructions page opens, in light and dark mode.
+- [x] Vitest: the queue renders rows from a stubbed API with their state labels (Waiting, In progress, Waiting for sign-off, Decided) and amounts formatted as US dollars.
+- [x] Vitest: the claim page shows the story, items, documents, policy and history, and the decision, payout, reason and section when there is one.
+- [x] Vitest: the instructions page shows the text with no way to edit it.
+- [x] TypeScript coverage at or above 80%; ESLint, Prettier and tsc clean, no `any`.
+- [x] Browser check with the Playwright MCP server: the queue shows 25 claims, a claim opens, the instructions page opens, in light and dark mode.
 
 ## Phase 5: Watching the agent and signing off
 
