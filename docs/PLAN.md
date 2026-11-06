@@ -67,16 +67,16 @@ Build `backend/db.py` (schema, connection, seeding from `data/`) and the read op
 
 Add `start_claim`, `add_step`, `list_steps`, `decide_claim`, `pay_claim` and `sign_off_claim`, with the state changes above.
 
-- [ ] `start_claim` moves a `waiting` claim to `in_progress`; on a `decided` claim it returns 409.
-- [ ] `decide_claim` with `decline` or `refer` and payout 0 moves the claim to `decided`.
-- [ ] `decide_claim` with `approve` and payout $420.00, then `pay_claim` with 420.00, records the payment and moves the claim to `decided`.
-- [ ] `decide_claim` with `approve` and payout $1,250.00 moves the claim to `waiting_for_signoff`.
-- [ ] Then `pay_claim` with 1250.00 returns 409 and no payment is recorded: the rule holds even when the agent tries to pay.
-- [ ] `pay_claim` with an amount other than the approved payout returns 409.
-- [ ] `sign_off_claim` with `HND-01` records the payment of $1,250.00, the handler and the date, and moves the claim to `decided`.
-- [ ] `sign_off_claim` on a claim that is not waiting for sign-off returns 409; an unknown handler returns 404.
-- [ ] Steps posted with `add_step` come back from `list_steps` in order.
-- [ ] Python coverage stays at or above 80%.
+- [x] `start_claim` moves a `waiting` claim to `in_progress`; on a `decided` claim it returns 409.
+- [x] `decide_claim` with `decline` or `refer` and payout 0 moves the claim to `decided`.
+- [x] `decide_claim` with `approve` and payout $420.00, then `pay_claim` with 420.00, records the payment and moves the claim to `decided`.
+- [x] `decide_claim` with `approve` and payout $1,250.00 moves the claim to `waiting_for_signoff`.
+- [x] Then `pay_claim` with 1250.00 returns 409 and no payment is recorded: the rule holds even when the agent tries to pay.
+- [x] `pay_claim` with an amount other than the approved payout returns 409.
+- [x] `sign_off_claim` with `HND-01` records the payment of $1,250.00, the handler and the date, and moves the claim to `decided`.
+- [x] `sign_off_claim` on a claim that is not waiting for sign-off returns 409; an unknown handler returns 404.
+- [x] Steps posted with `add_step` come back from `list_steps` in order.
+- [x] Python coverage stays at or above 80%.
 
 ## Phase 3: The UnderCover Agent
 

@@ -1,63 +1,18 @@
 """The UnderCover backend."""
 
 import json
-import sqlite3
-from collections.abc import Iterator
 from pathlib import Path
-from typing import Annotated, Any
+from typing import Any
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException
 
-from backend import db
+from backend import db, workflow
+from backend.claims import Database, claim_view, record
 
 INSTRUCTIONS = Path(__file__).parent / "instructions.md"
 
 app = FastAPI(title="UnderCover")
-
-
-def connection() -> Iterator[sqlite3.Connection]:
-    """Give each request its own database connection."""
-    database = db.connect()
-    try:
-        yield database
-    finally:
-        database.close()
-
-
-Database = Annotated[sqlite3.Connection, Depends(connection)]
-
-
-def record(database: sqlite3.Connection, table: str, key: str, value: str) -> Any:
-    """Return one stored JSON record, or raise 404."""
-    row = database.execute(
-        f"SELECT record FROM {table} WHERE {key} = ?",  # noqa: S608
-        (value,),
-    ).fetchone()
-    if row is None:
-        raise HTTPException(404, f"{value} not found")
-    return json.loads(row["record"])
-
-
-def claim_view(database: sqlite3.Connection, claim_id: str) -> dict[str, Any]:
-    """Return a claim with its status, decision and payment."""
-    claim = record(database, "claims", "claim_id", claim_id)
-    status = database.execute(
-        "SELECT status FROM claims WHERE claim_id = ?", (claim_id,)
-    ).fetchone()["status"]
-    decision = database.execute(
-        "SELECT decision, payout, reason, section, decided_at FROM decisions"
-        " WHERE claim_id = ?",
-        (claim_id,),
-    ).fetchone()
-    payment = database.execute(
-        "SELECT amount, handler_id, paid_at FROM payments WHERE claim_id = ?",
-        (claim_id,),
-    ).fetchone()
-    return claim | {
-        "status": status,
-        "decision": dict(decision) if decision else None,
-        "payment": dict(payment) if payment else None,
-    }
+app.include_router(workflow.router)
 
 
 @app.get("/api/health", operation_id="health")
