@@ -3,10 +3,12 @@
 import sqlite3
 from datetime import UTC, datetime
 from typing import Any, Literal, Self
+from uuid import uuid4
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, BackgroundTasks, HTTPException
 from pydantic import BaseModel, model_validator
 
+from agent import main as agent
 from backend import db
 from backend.claims import Database, claim_view, record, status
 
@@ -81,6 +83,21 @@ def start(database: sqlite3.Connection, claim_id: str) -> dict[str, Any]:
 def start_claim(claim_id: str, database: Database) -> dict[str, Any]:
     """Mark a claim as in progress when the agent starts work on it."""
     return start(database, claim_id)
+
+
+def run_in_background(claim_id: str) -> None:
+    """Run the agent on a claim in a thread of its own."""
+    agent.run(claim_id, uuid4().hex)
+
+
+@router.post("/run", operation_id="run_agent", status_code=202)
+def run_agent(
+    claim_id: str, background_tasks: BackgroundTasks, database: Database
+) -> dict[str, Any]:
+    """Start the agent on a claim in the background."""
+    claim = start(database, claim_id)
+    background_tasks.add_task(run_in_background, claim_id)
+    return claim
 
 
 @router.post("/steps", operation_id="add_step")

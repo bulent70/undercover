@@ -82,13 +82,13 @@ Add `start_claim`, `add_step`, `list_steps`, `decide_claim`, `pay_claim` and `si
 
 Rewrite `agent/main.py` around the API. Tools: `get_claim`, `get_policy`, `get_claim_history`, `get_plan`, `get_policy_wording`, `decide_claim`, `pay_claim`. `run(claim_id, thread_id)` fetches the instructions from `get_instructions`, calls `start_claim`, runs `create_agent` and records every step through a callback. Add `run_agent` to the backend, which runs `agent.main.run` as a background task, and `uv run -m agent CLM-1001` to run one claim from the terminal. Finish `backend/instructions.md`: read everything, decide from the policy wording, work out the payout as in its section 10, give a reason of two or three sentences and the section, pay approved claims, and never mention or look for handler decisions.
 
-- [ ] Stub-model test: the agent reads the claim, decides `approve` with $420.00 and pays; the claim ends `decided` with a payment.
-- [ ] Stub-model test: the agent approves $1,250.00 and tries to pay; it receives the refusal as a tool result, the run finishes, and the claim is `waiting_for_signoff` with no payment.
-- [ ] Stub-model test: each tool call and model reply appears in `list_steps`.
-- [ ] A test checks that the agent has no tool or route that reaches `data/evals/`, and that `agent/` has no path to it.
-- [ ] `run` uses `MODEL_NAME` when set, otherwise `openai/gpt-6-luna` with low reasoning effort (existing test kept).
-- [ ] `POST /api/claims/CLM-1001/run` returns 202 and the claim moves to `in_progress` (stub model in the test).
-- [ ] Live check, one claim, done by me with the student's key: `uv run -m agent CLM-1001` ends with a decision, a reason and a section, and `GET /api/claims/CLM-1001` shows it. Costs a few cents, or nothing with `MODEL_NAME=openrouter/free`.
+- [x] Stub-model test: the agent reads the claim, decides `approve` with $420.00 and pays; the claim ends `decided` with a payment.
+- [x] Stub-model test: the agent approves $1,250.00 and tries to pay; it receives the refusal as a tool result, the run finishes, and the claim is `waiting_for_signoff` with no payment.
+- [x] Stub-model test: each tool call and model reply appears in `list_steps`.
+- [x] A test checks that the agent has no tool or route that reaches `data/evals/`, and that `agent/` has no path to it.
+- [x] `run` uses `MODEL_NAME` when set, otherwise `openai/gpt-6-luna` with low reasoning effort (existing test kept).
+- [x] `POST /api/claims/CLM-1001/run` returns 202 and the claim moves to `in_progress` (stub model in the test).
+- [x] Live check, one claim, done by me with the student's key: `uv run -m agent CLM-1001` ends with a decision, a reason and a section, and `GET /api/claims/CLM-1001` shows it. Costs a few cents, or nothing with `MODEL_NAME=openrouter/free`.
 
 ## Phase 4: Dashboard: queue, claim and instructions
 
